@@ -34,9 +34,8 @@ async function start() {
     await store.printAll();
   }
   else if (command === 'show') {
-    let fact = params.slice(0, 1)[0];
-    let currentDay = params.slice(1, 2)[0];
-    await store.printEntry(fact, currentDay);
+    let index = params.slice(0, 1)[0];
+    await store.printEntry(index);
   }
   else {
     help();
