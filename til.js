@@ -30,6 +30,15 @@ async function start() {
     let text = params.join(' ').trim();
     await store.addFact(text);
   }
+  else if (command === 'edit') {
+    let index = params.slice(0, 1)[0];
+    let text = params.slice(1).join(' ').trim();
+    await store.editFact(index, text);
+  }
+  else if (command === 'delete') {
+    let index = params.slice(0, 1)[0];
+    await store.deleteFact(index);
+  }
   else if (command === 'list') {
     await store.printAll();
   }
