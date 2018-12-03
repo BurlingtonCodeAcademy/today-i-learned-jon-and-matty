@@ -67,7 +67,7 @@ async function getAll(request, response) {
   }, function (err) {
     assert.equal(null, err);
     output += `<button class="button" onclick="event.preventDefault(); indexToEdit(document.querySelector('input[name=radio]:checked').id);">Edit Selection</button>`
-    output += `<input type='submit' value='Delete Selection' class="button" onclick="alert('Are you sure you want to delete this entry?')"> </form>`
+    output += `<input type='submit' value='Delete Selection' class="button" onclick="if (confirm('Are you sure you want to delete this entry?') == false) {event.preventDefault()}"> </form>`
     output += `<script>function indexToEdit(index) {window.location.href='/edit/' + index;}</script>`
     response.header('Content-Type', 'text/html');
     response.type('text/html')
