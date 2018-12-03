@@ -46,6 +46,10 @@ async function start() {
     let index = params.slice(0, 1)[0];
     await store.printEntry(index);
   }
+  else if (command === 'text') {
+    let index = params.slice(0, 1)[0];
+    await store.printEntryText(index);
+  }
   else {
     help();
   }
