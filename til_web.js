@@ -66,7 +66,9 @@ async function getAll(request, response) {
     output += `<div class="line"><span class="select"><input type="radio" name="radio" id="${entry.index}" value="${entry.index}"></span><span class="date">${moment(entry.when).calendar()}</span><span class="entries">${entry.text}</span></div>`;
   }, function (err) {
     assert.equal(null, err);
-    output += `<input type='submit' value='Delete Selection' class="button"> </form>`
+    output += `<button class="button" onclick="event.preventDefault(); indexToEdit(document.querySelector('input[name=radio]:checked').id);">Edit Selection</button>`
+    output += `<input type='submit' value='Delete Selection' class="button" onclick="alert('Are you sure you want to delete this entry?')"> </form>`
+    output += `<script>function indexToEdit(index) {window.location.href='/edit/' + index;}</script>`
     response.header('Content-Type', 'text/html');
     response.type('text/html')
       .send(output)
@@ -87,5 +89,28 @@ async function deleteFact(request, response) {
   console.log("Deleted entry with index " + request.body.radio);
   response.redirect('/facts');
 }
+
+app.get('/edit/:index', editScreen);
+
+async function editScreen(request, response) {
+  let indexNumber = request.params.index;
+  let entryText = await store.printEntryText(indexNumber);
+  let output = '<link rel="stylesheet" type="text/css" media="screen" href="/main.css" />';
+  output += '<body><div class="results">'
+  output += `<h1>Edit Entry #${indexNumber}:</h1>`
+  output += `<form method='POST' action='/update/${indexNumber}'> <input type='text' name='text' class='text' value="${entryText}"> <input type='submit' value='Update' class="button"> </form>`
+  response.header('Content-Type', 'text/html');
+  response.type('text/html')
+    .send(output)
+}
+
+app.post('/update/:index', editFact);
+
+async function editFact(request, response) {
+  let indexNumber = request.params.index;
+  await store.editFact(indexNumber, request.body.text.trim());
+  response.redirect('/facts');
+}
+
 
 app.listen(port, () => console.log(`TIL web app listening on port ${port}!`))
